@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d9f67dc8-f5a9-4741-a4ec-37f79d40ae2e" name="Changes" comment="Routing mostly done">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources/0f77fea5-bd39-4153-bed9-85db51cd931a.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources/0f77fea5-bd39-4153-bed9-85db51cd931a/storage_v2/_src_/schema/main.uQUzAA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources/8d3dbe80-22fd-42ac-b073-3087dcfd7a90.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources/8d3dbe80-22fd-42ac-b073-3087dcfd7a90/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources/8d3dbe80-22fd-42ac-b073-3087dcfd7a90/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/dataSources/a334e1fc-fbb3-4c8b-8511-fc783e69e5da/storage_v2/_src_/schema/main.uQUzAA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/httpRequests/2024-04-03T184326.422.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/httpRequests/http-client.cookies" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/httpRequests/http-requests-log.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/morningexapi.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/shelf/Uncommitted_changes_before_Update_at_4_13_2024_10_47_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/shelf/Uncommitted_changes_before_Update_at_4_13_2024_10_47_PM_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/shelf/Uncommitted_changes_before_Update_at_4_13_2024_10_47_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/shelf/Uncommitted_changes_before_Update_at_4_13_2024_10_47_PM__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/Cargo.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/Cargo.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/Shuttle.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/database/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/config.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/jwt.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/main.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/routes.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/routes/default_routes.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/routes/login_routes.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/routes/middlewares.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/routes/mx_routes.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/routes/user_routes.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/services/calendar_service.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/services/email_service.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/services/mod.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/services/mx_service.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/services/user_manager.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/types/data_representations.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/types/errors.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/types/mod.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/types/mx_date_algorithm.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../morningexapi/src/types/state.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/data_representations.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/data_representations.rs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="hgl6rinv" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2dvrqdC6dZlwNj3SvwQqbyAwbLS" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Run rustapi in debug.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Run rustapi.executor&quot;: &quot;Run&quot;,
+    &quot;Database Script.schema.sql.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.httprequests | #1.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;postgres&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Chase Wayland/Independent_Study-Backend_development/morningexapi&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\RustRover 233.14015.153\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;,
+      &quot;postgresql&quot;
+    ],
+    &quot;RunConfigurationTargetLRU&quot;: [
+      &quot;5b86cbb7-799d-4772-aabd-986c18091391&quot;,
+      &quot;0f77fea5-bd39-4153-bed9-85db51cd931a&quot;,
+      &quot;8d3dbe80-22fd-42ac-b073-3087dcfd7a90&quot;
+    ],
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect&quot;: [
+      &quot;PostgreSQL&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Chase Wayland\Independent_Study-Backend_development\rustapi\src\router" />
+      <recent name="C:\Users\Chase Wayland\Independent_Study-Backend_development\rustapi\src\services" />
+      <recent name="C:\Users\Chase Wayland\Independent_Study-Backend_development\rustapi\src\types" />
+      <recent name="C:\Users\Chase Wayland\Independent_Study-Backend_development\rustapi\Database" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Cargo.Run rustapi in debug">
+    <configuration name="Run rustapi in debug" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run rustapi in release" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run --release" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="schema.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
+      <script-file value="$PROJECT_DIR$/database/schema.sql" />
+      <script-mode>FILE</script-mode>
+      <data-source id="8d3dbe80-22fd-42ac-b073-3087dcfd7a90" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Cargo.Run rustapi in debug" />
+      <item itemvalue="Cargo.Run rustapi in release" />
+      <item itemvalue="Database Script.schema.sql" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo.Run rustapi in release" />
+        <item itemvalue="Database Script.schema.sql" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d9f67dc8-f5a9-4741-a4ec-37f79d40ae2e" name="Changes" comment="" />
+      <created>1710899584608</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1710899584608</updated>
+      <workItem from="1710899585632" duration="2716000" />
+      <workItem from="1710902704780" duration="3171000" />
+      <workItem from="1710966455471" duration="1288000" />
+      <workItem from="1710971200590" duration="10172000" />
+      <workItem from="1711065425433" duration="11925000" />
+      <workItem from="1711146008903" duration="6230000" />
+      <workItem from="1711158204203" duration="4277000" />
+      <workItem from="1711163864767" duration="1233000" />
+      <workItem from="1711201795483" duration="1883000" />
+      <workItem from="1711223972843" duration="385000" />
+      <workItem from="1711235368479" duration="19628000" />
+      <workItem from="1711337368801" duration="13343000" />
+      <workItem from="1711503228108" duration="4746000" />
+      <workItem from="1711578633612" duration="4760000" />
+      <workItem from="1711587853010" duration="1979000" />
+      <workItem from="1711679456188" duration="601000" />
+      <workItem from="1711680678384" duration="4073000" />
+      <workItem from="1711809051866" duration="23000" />
+      <workItem from="1711821789238" duration="11352000" />
+      <workItem from="1711834528078" duration="34162000" />
+      <workItem from="1712175541947" duration="9268000" />
+      <workItem from="1712191315172" duration="2962000" />
+      <workItem from="1712278355069" duration="2958000" />
+      <workItem from="1712282879422" duration="789000" />
+      <workItem from="1712423084080" duration="12149000" />
+      <workItem from="1712438517087" duration="13065000" />
+      <workItem from="1712515715956" duration="5030000" />
+      <workItem from="1712523573783" duration="6210000" />
+      <workItem from="1712541971940" duration="243000" />
+      <workItem from="1712605208580" duration="18274000" />
+      <workItem from="1712698238766" duration="7813000" />
+      <workItem from="1712775949378" duration="4271000" />
+      <workItem from="1712800845028" duration="1112000" />
+      <workItem from="1712951138221" duration="16126000" />
+      <workItem from="1713026420043" duration="12529000" />
+      <workItem from="1713103897524" duration="5954000" />
+      <workItem from="1713196696201" duration="3217000" />
+    </task>
+    <task id="LOCAL-00001" summary="Rust app!">
+      <option name="closed" value="true" />
+      <created>1710995784453</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1710995784453</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Rust app!">
+      <option name="closed" value="true" />
+      <created>1711080660831</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1711080660831</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Rust app!">
+      <option name="closed" value="true" />
+      <created>1711081859876</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1711081859876</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Databse stuff!!! its happenign!!!">
+      <option name="closed" value="true" />
+      <created>1711165087101</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1711165087101</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Databse stuff!!! its happenign!!!">
+      <option name="closed" value="true" />
+      <created>1711224346245</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1711224346245</updated>
+    </task>
+    <task id="LOCAL-00006" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711318505802</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1711318505802</updated>
+    </task>
+    <task id="LOCAL-00007" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711319348600</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1711319348600</updated>
+    </task>
+    <task id="LOCAL-00008" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711337266201</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1711337266201</updated>
+    </task>
+    <task id="LOCAL-00009" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711419073876</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1711419073876</updated>
+    </task>
+    <task id="LOCAL-00010" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711422832902</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1711422832902</updated>
+    </task>
+    <task id="LOCAL-00011" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711506243293</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1711506243293</updated>
+    </task>
+    <task id="LOCAL-00012" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711686662186</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1711686662186</updated>
+    </task>
+    <task id="LOCAL-00013" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711686900857</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1711686900857</updated>
+    </task>
+    <task id="LOCAL-00014" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711687343694</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1711687343694</updated>
+    </task>
+    <task id="LOCAL-00015" summary="MXservice implementation begins">
+      <option name="closed" value="true" />
+      <created>1711854593282</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1711854593282</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Oauth with JWT">
+      <option name="closed" value="true" />
+      <created>1712094276690</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1712094276690</updated>
+    </task>
+    <task id="LOCAL-00017" summary="OAUTH IS FINALLY DONE, END ME">
+      <option name="closed" value="true" />
+      <created>1712106660579</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1712106660579</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Routing mostly done">
+      <option name="closed" value="true" />
+      <created>1712191434114</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1712191434114</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Routing mostly done">
+      <option name="closed" value="true" />
+      <created>1712191486537</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1712191486537</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Routing mostly done">
+      <option name="closed" value="true" />
+      <created>1712969062081</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1712969062081</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Routing mostly done">
+      <option name="closed" value="true" />
+      <created>1712972018388</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1712972018388</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Routing mostly done">
+      <option name="closed" value="true" />
+      <created>1713066457475</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1713066457475</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Routing mostly done">
+      <option name="closed" value="true" />
+      <created>1713196981513</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1713196981513</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Routing mostly done">
+      <option name="closed" value="true" />
+      <created>1713197174533</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1713197174533</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Rust app!" />
+    <MESSAGE value="Databse stuff!!! its happenign!!!" />
+    <MESSAGE value="MXservice implementation begins" />
+    <MESSAGE value="Oauth with JWT" />
+    <MESSAGE value="OAUTH IS FINALLY DONE, END ME" />
+    <MESSAGE value="Routing mostly done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Routing mostly done" />
+  </component>
+</project>

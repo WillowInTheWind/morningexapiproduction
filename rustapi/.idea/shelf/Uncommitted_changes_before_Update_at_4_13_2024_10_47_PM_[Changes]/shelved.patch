@@ -1,0 +1,59 @@
+Index: docker-compose.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>version: '3'\r\nservices:\r\n  api:\r\n    image: chaseway/rustapi\r\n    environment:\r\n      DATABASE_URL: \"sqlite:C:/Users/Chase Wayland/Independent_Study-Backend_development/rustapi/database/Db\"\r\n      CLIENT_ID : \"50375690088-d550pisn0njk98emapjq169fcre5iqp8.apps.googleusercontent.com\"\r\n      CLIENT_SECRET : \"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\"\r\n      JWT_SECRET : \"dee369bec579dcaaec2a1fabaf0d513c96ceae651396e1f4da9251839ea74fea\"\r\n    build:\r\n      context: .\r\n      dockerfile: Dockerfile\r\n    ports:\r\n      - \"8080:8080\"\r\n    depends_on:\r\n      - db\r\n  db:\r\n    image: postgres:15.2-alpine\r\n    restart: always\r\n    environment:\r\n      POSTGRES_PASSWORD: \"69184fed7a8a637fbc4e2ee206c82acf46f8c9ff47728397bc92ee9bf3ac7e5b\"\r\n    ports:\r\n      - \"5432:5432\"\r\n    volumes:\r\n      - db:/var/lib/postgresql/data\r\n\r\nvolumes:\r\n  db:\r\n    driver: local
+===================================================================
+diff --git a/docker-compose.yml b/docker-compose.yml
+--- a/docker-compose.yml	
++++ b/docker-compose.yml	
+@@ -1,29 +1,32 @@
+-version: '3'
++version: '3.9'
++
+ services:
+-  api:
++  rustapp:
++    container_name: rustapi
+     image: chaseway/rustapi
+-    environment:
+-      DATABASE_URL: "sqlite:C:/Users/Chase Wayland/Independent_Study-Backend_development/rustapi/database/Db"
+-      CLIENT_ID : "50375690088-d550pisn0njk98emapjq169fcre5iqp8.apps.googleusercontent.com"
+-      CLIENT_SECRET : "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"
+-      JWT_SECRET : "dee369bec579dcaaec2a1fabaf0d513c96ceae651396e1f4da9251839ea74fea"
+     build:
+       context: .
+       dockerfile: Dockerfile
++      args:
++        - "{}"
++    env_file:
++      - .env
+     ports:
+-      - "8080:8080"
++      - '8080:8080'
+     depends_on:
+       - db
++
+   db:
+-    image: postgres:15.2-alpine
+-    restart: always
++    container_name: db
++    image: 'postgres:12'
++    ports:
++      - '5432:5432'
+     environment:
+-      POSTGRES_PASSWORD: "69184fed7a8a637fbc4e2ee206c82acf46f8c9ff47728397bc92ee9bf3ac7e5b"
+-    ports:
+-      - "5432:5432"
++      - POSTGRES_USER=postgres
++      - POSTGRES_PASSWORD = {}
++      - POSTGRES_DB=postgres
+     volumes:
+-      - db:/var/lib/postgresql/data
++      - pgdata:/var/lib/postgresql/data
+ 
+ volumes:
+-  db:
+-    driver: local
+\ No newline at end of file
++  pgdata: {}
+\ No newline at end of file
