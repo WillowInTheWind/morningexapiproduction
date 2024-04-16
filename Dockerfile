@@ -1,10 +1,16 @@
-FROM messense/rust-musl-cross:x86_64-musl as builder
-ENV SQLX_OFFLINE = true
+FROM rust:1.76 AS builder
+ENV DATABASE_URL ${DATABASE_URL}
 WORKDIR /morningexapiproduction
-
+#COPY Cargo.lock Cargo.toml ./
 COPY . .
 
-RUN cargo build --release --target x86_64-unknown-linux-musl
+RUN cargo build --release
 
-FROM scratch
-COPY --from=builder /morningexapiproduction/target/x86_64-unknown-linux-musl/release
+FROM debian:bookworm-slim AS runner
+
+RUN apt-get update && apt-get install -y ca-certificates libssl3
+COPY --from=builder morningexapiproduction/target/release/morningexapiproduction /morningexapiproduction
+
+EXPOSE 8080
+
+CMD ["/target/release/morningexapiproduction"]

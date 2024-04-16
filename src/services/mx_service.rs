@@ -3,7 +3,6 @@ use chrono::NaiveDate;
 use sqlx::{Pool, Postgres};
 use crate::services::user_manager::UserService;
 use crate::types::data_representations::MorningExercise;
-use crate::types::internal_types::MxQuery;
 
 pub trait MxService {
     async fn get_mx_by_id(&self, id:i64) -> Result<MorningExercise, (StatusCode, String)>;
@@ -122,8 +121,7 @@ impl MxService for Pool<Postgres> {
     }
 
     async fn get_mxs(&self) -> Result<Vec<MorningExercise>, (StatusCode, String)> {
-        let query : Vec<MxQuery> = sqlx::query_as!
-            (MxQuery, "SELECT * FROM MX")
+        let query : Vec<(i32, i32, i32, NaiveDate, String, String)> = sqlx::query_as("SELECT * FROM MX")
             .fetch_all(self)
             .await
             .map_err(|_e| (StatusCode::INTERNAL_SERVER_ERROR, "query failed".to_string()))?;
@@ -132,12 +130,12 @@ impl MxService for Pool<Postgres> {
 
         let mut mxs: Vec<MorningExercise> = Vec::new();
         for mx in query {
-            let user = self.get_user_by_id(mx.owner as i32)
+            let user = self.get_user_by_id(mx.1)
                 .await
-                .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-            mxs.push(MorningExercise::new(mx.id ,user,mx.mx_index,mx.date,mx.title,mx.description, None));
+                .map_err(|_err| (StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
+            println!("{:?}", user);
+            mxs.push(MorningExercise::new(mx.0, user, mx.2, mx.3, mx.4, mx.5, None));
         }
-
 
 
         Ok(mxs)
@@ -150,12 +148,12 @@ impl MxService for Pool<Postgres> {
         let description: String = mx.description;
 
         println!("->> Inserting MX");
-        let query = sqlx::query!(
-            r#"INSERT into MX (mx_index, date,owner, title,description) VALUES ($1,$2,$3,$4, $5)"#,
-            1,
-            date,
-            owner,
-            title,
+        let query = sqlx::query(
+            r#"INSERT into MX (mx_index, date,owner, title,description) VALUES ($1,$2,$3,$4, $5)"#).bind(
+            1).bind(
+            date).bind(
+            owner).bind(
+            title).bind(
             description)
             .execute(self)
             .await

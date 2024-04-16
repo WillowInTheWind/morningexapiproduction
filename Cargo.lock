@@ -1238,6 +1238,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "morningexapiproduction"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-session",
+ "async-trait",
+ "axum",
+ "axum-extra",
+ "axum-macros",
+ "chrono",
+ "constant_time_eq",
+ "dotenv",
+ "headers",
+ "hostname",
+ "http 1.1.0",
+ "jsonwebtoken",
+ "oauth2",
+ "once_cell",
+ "reqwest 0.12.2",
+ "rustcrypto",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "time",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
 name = "native-tls"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1752,39 +1785,6 @@ dependencies = [
  "spki",
  "subtle",
  "zeroize",
-]
-
-[[package]]
-name = "rustapi"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-session",
- "async-trait",
- "axum",
- "axum-extra",
- "axum-macros",
- "chrono",
- "constant_time_eq",
- "dotenv",
- "headers",
- "hostname",
- "http 1.1.0",
- "jsonwebtoken",
- "oauth2",
- "once_cell",
- "reqwest 0.12.2",
- "rustcrypto",
- "serde",
- "serde_json",
- "sqlx",
- "time",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "uuid",
 ]
 
 [[package]]

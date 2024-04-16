@@ -1,6 +1,7 @@
 use http::StatusCode;
 use sqlx::{Pool, Error, Postgres};
 use crate::types::data_representations::{ GoogleUser};
+
 pub(crate) trait UserService: Send + Sync {
     async fn get_users(&self) -> Result<Vec<GoogleUser>, sqlx::Error>;
     async fn get_user_by_id(&self, id: i32) -> Result<GoogleUser, sqlx::Error>;
@@ -20,8 +21,8 @@ pub(crate) trait UserService: Send + Sync {
 }
 impl UserService for Pool<Postgres> {
     async fn get_users(&self) -> Result<Vec<GoogleUser>, Error> {
-        let query = sqlx::query_as!(
-            GoogleUser, "SELECT * FROM GoogleUsers")
+        let query: Result<Vec<GoogleUser>, Error> = sqlx::query_as(
+             "SELECT * FROM GoogleUsers")
             .fetch_all(self).await;
         query
     }
@@ -34,11 +35,12 @@ impl UserService for Pool<Postgres> {
     }
 
     async fn set_user_phone_number(&self, number: String, id: i32) -> Result<StatusCode, Error> {
-            sqlx::query!(
+            sqlx::query(
                 "Update GoogleUsers SET phone_number = $1 where id = $2",
-                number,
-                id
+
             )
+                .bind(number)
+                .bind(id)
                 .fetch_one(self)
                 .await?
             ;
@@ -46,50 +48,51 @@ impl UserService for Pool<Postgres> {
         Ok(StatusCode::CREATED)
     }
     async fn get_user_by_name(&self, name: &str) -> Result<GoogleUser, Error> {
-        let query = sqlx::query_as!(
-            GoogleUser, "SELECT * FROM GoogleUsers Where name = $1", name)
+        let query: Result<GoogleUser, Error> = sqlx::query_as(
+             "SELECT * FROM GoogleUsers Where name = $1")
+            .bind(name)
             .fetch_one(self)
             .await;
         query
     }
 
     async fn get_user_by_sub(&self, sub: &str) -> Result<GoogleUser, Error> {
-        let query = sqlx::query_as!(
-            GoogleUser, "SELECT * FROM GoogleUsers Where sub = $1", sub)
+        let query: Result<GoogleUser, Error> = sqlx::query_as(
+            "SELECT * FROM GoogleUsers Where sub = $1" ).bind(sub)
             .fetch_one(self).await;
         query
     }
 
     async fn get_user_by_email(&self, email: &str) -> Result<GoogleUser, Error> {
-        let query = sqlx::query_as!(
-            GoogleUser, "SELECT * FROM GoogleUsers Where email = $1", email)
+        let query = sqlx::query_as(
+             "SELECT * FROM GoogleUsers Where email = $1").bind( email)
             .fetch_one(self).await;
         query
     }
 
     async fn create_user(&self, new_user: GoogleUser) -> Result<i32, Error> {
         let token = new_user.token.unwrap().clone();
-        let query =
-            sqlx::query!(
+        let _query =
+            sqlx::query(
                 r#"INSERT into GoogleUsers (sub, picture, email, name, token) values ($1,$2, $3, $4, $5) RETURNING id
 "#,
-                new_user.sub,
-                new_user.picture,
-                new_user.email,
-                new_user.name,
-                token
+            ).bind(new_user.sub
+            ).bind(new_user.picture
+            ).bind(new_user.email
+            ).bind(new_user.name
+            ).bind(token
             )
                 .fetch_one(self)
                 .await?;
 
 
-        Ok(query.id)
+        Ok(200)
     }
 
     async fn delete_user_by_id(&self, id: i32) -> Result<StatusCode, Error> {
-            sqlx::query!(
+            sqlx::query(
                 "Delete from GoogleUsers where id = $1",
-                id
+            ).bind(id
             )
                 .fetch_one(self)
                 .await?;
@@ -98,9 +101,9 @@ impl UserService for Pool<Postgres> {
     }
 
     async fn delete_user_by_user_name(&self, name: String) -> Result<StatusCode, Error> {
-            sqlx::query!(
+            sqlx::query(
                 "Delete from GoogleUsers where name = $1",
-                name
+            ).bind(name
             )
                 .fetch_one(self)
                 .await?;
@@ -113,9 +116,9 @@ impl UserService for Pool<Postgres> {
 
     async fn reset_user_token(&self, token: String, id: i32) -> Result<StatusCode, Error> {
 
-            sqlx::query!(
+            sqlx::query(
                 "Update GoogleUsers SET token = $1 where id = $2",
-                token,
+            ).bind(token).bind(
                 id
             )
                 .execute(self)
@@ -125,9 +128,9 @@ impl UserService for Pool<Postgres> {
     }
     async fn delete_user_by_email(&self, email: String) -> Result<StatusCode, Error> {
 
-            sqlx::query!(
-                "Delete from GoogleUsers where email = $1",
-                email
+            sqlx::query(
+                "Delete from GoogleUsers where email = $1"
+            ).bind(email
             )
                 .execute(self)
                 .await?

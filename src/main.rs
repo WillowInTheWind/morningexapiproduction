@@ -5,13 +5,12 @@ mod services;
 mod types;
 
 use std::env;
-use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
 
 #[tokio::main]
 async fn main()
 {
-        dotenv().ok();
+        dotenv::dotenv().ok();
     //Init environment variables and tracing
         tracing_subscriber::fmt::init();
         let database_url =env::var("DATABASE_URL").expect("DATABASE_URL must set");
@@ -23,6 +22,7 @@ async fn main()
             .connect(&database_url)
             .await
             .expect("could not connect");
+        sqlx::migrate!("./database/migrations").run(&pool).await.expect("Migration failed");
 
         let oauth_client = config::oauth_client().unwrap();
         let client = reqwest::Client::new();

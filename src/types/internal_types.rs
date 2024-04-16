@@ -22,16 +22,6 @@ pub struct EnvironmentVariables {
     pub port: String,
 }
 
-#[derive(Debug)]
-pub struct MxQuery {
-    pub id: i32,
-    pub mx_index: i32,
-    pub owner: i32,
-    pub date: NaiveDate,
-    pub title: String,
-    pub description: String
-}
-
 pub(crate) trait DateToString {
     fn date_to_long_string(&self) -> String;
     fn date_to_short_string(&self) -> String;

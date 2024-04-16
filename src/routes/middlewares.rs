@@ -9,7 +9,6 @@ use crate::types::state::AppState;
 use axum_extra::extract::cookie::CookieJar;
 use crate::config::KEYS;
 use crate::types::data_representations::{Claims};
-
 pub async fn auth(
     cookie_jar: CookieJar,
     State(state): State<AppState>,
