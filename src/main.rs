@@ -22,7 +22,6 @@ async fn main()
             .connect(&database_url)
             .await
             .expect("could not connect");
-        sqlx::migrate!("./database/migrations").run(&pool).await.expect("Migration failed");
 
         let oauth_client = config::oauth_client().unwrap();
         let client = reqwest::Client::new();
