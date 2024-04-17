@@ -1,4 +1,2 @@
 target
 .env
-Dockerfile
-docker-compose.yml
