@@ -8,6 +8,7 @@
 
 ARG RUST_VERSION=1.76.0
 ARG APP_NAME=morningexapiproduction
+
 ################################################################################
 # Create a stage for building the application.
 
@@ -17,7 +18,12 @@ WORKDIR /app
 
 # Install host build dependencies.
 RUN apk add --no-cache clang lld musl-dev git
-RUN apk update && apk add --no-cache pkgconfig openssl-dev ca-certificates linux-headers
+RUN apk add --no-cache clang lld musl-dev git
+RUN apk add --no-cache pkgconf openssl-dev musl-dev cmake make gcc g++ nodejs perl clang16 curl strace
+
+ENV OPENSSL_DIR=/usr
+
+# Build the application.
 # Leverage a cache mount to /usr/local/cargo/registry/
 # for downloaded dependencies, a cache mount to /usr/local/cargo/git/db
 # for git repository dependencies, and a cache mount to /app/target/ for
