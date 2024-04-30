@@ -15,11 +15,11 @@ pub static KEYS: Lazy<Keys> = Lazy::new(|| {
 pub static TOKEN_LENGTH_SECONDS: i64 = 12*60*60;
 
 pub async fn initialize_environment_variable() -> EnvironmentVariables {
-    let address: String = match env::var("SERVER_HOST") {
+    let address: String = match env::var("HOST") {
         Ok(address) => {address}
         _ => {String::from("127.0.0.1")}
     };
-    let port: String = match env::var("SERVER_PORT") {
+    let port: String = match env::var("PORT") {
         Ok(port) => { port }
         _ => {"8080".to_string()}
     };
