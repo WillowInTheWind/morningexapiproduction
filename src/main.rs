@@ -27,7 +27,7 @@ async fn main()
             .connect(&database_url)
             .await
             .unwrap();
-        sqlx::migrate!("./migrations").run(&pool).await.unwrap();
+        // sqlx::migrate!("./migrations").run(&pool).await.unwrap();
 
         println!("->> database pool found");
         println!("->> Building app state");

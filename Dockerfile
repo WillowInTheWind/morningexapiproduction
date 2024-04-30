@@ -24,7 +24,7 @@ RUN export DOCKER_DEFAULT_PLATFORM=linux/amd64
 # Install host build dependencies.
 RUN apk add --no-cache clang lld musl-dev git
 RUN apk update && apk add strace
-RUN apk add --no-cache pkgconf openssl-dev musl-dev cmake make gcc g++ nodejs perl clang16 curl strace
+RUN apk add --no-cache pkgconf musl-dev cmake make gcc g++ nodejs perl clang16 curl strace
 RUN export DOCKER_BUILDKIT=1
 ENV OPENSSL_DIR=/usr
 
