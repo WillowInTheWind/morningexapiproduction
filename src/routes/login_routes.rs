@@ -7,7 +7,7 @@ use http::StatusCode;
 use anyhow::Context;
 use axum::Json;
 
-use crate::jwt;
+use crate::{jwt, types};
 use crate::services::user_manager::UserService;
 use crate::types::state::AppState;
 use crate::types::data_representations::GoogleUser;
@@ -39,25 +39,6 @@ pub(crate) async fn login_authorized(
         ;
 
     println!("->> user data found ");
-    // let mx = MorningExercise::new_with_date(
-    //     1, user_data.clone(), NaiveDate::from_ymd_opt(2024,6,6).unwrap(), "WOW".to_string(), "WOW".to_string(), None
-    // );
-    //
-    //
-    // let date = &mx.date.and_hms_opt(10,50,0);
-    // let enddate = &mx.date.and_hms_opt(11,30,0);
-
-    // let event = CalendarEvent::new(mx.clone().title, date.unwrap(), enddate.unwrap());
-    // let calendar/* Type */ = state.reqwest_client
-    //     .post("https://www.googleapis.com/calendar/v3/calendars/wayland.chase@gmail.com/events")
-    //     .bearer_auth(token.access_token().secret())
-    //     .json(&event)
-    //     .send()
-    //     .await
-    //     .map_err(|e| StatusCode::INTERNAL_SERVER_ERROR)
-    //     ;
-
-    // println!("{:?}",calendar);
 
     let user_exists: bool =
         sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM GoogleUsers WHERE name = $1)")
@@ -65,6 +46,8 @@ pub(crate) async fn login_authorized(
             .fetch_one(&state.dbreference)
             .await
             .context("failed in finding if user exists").unwrap();
+
+    types::internal_types::log_server_route(StatusCode::CREATED, format!("User {} was created",user_data.name));
 
     if user_exists {
         let user = state.dbreference.get_user_by_name(&user_data.name).await?;
