@@ -1,3 +1,4 @@
+
 CREATE TABLE googleusers (
                              id  serial NOT NULL PRIMARY KEY ,
                              sub TEXT UNIQUE NOT NULL,
