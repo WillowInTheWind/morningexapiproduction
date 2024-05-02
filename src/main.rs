@@ -24,16 +24,24 @@ async fn main()
         let pool = PgPoolOptions::new()
             .max_connections(5)
             .connect(&database_url)
-            .await
-            .unwrap();
-        let _ = sqlx::migrate!("./migrations").run(&pool).await;
+            .await;
+        let dbpool = match pool {
+                Ok(pool)  => {
+                        pool
+                }
+                Err(pool)=> {
+                        println!("{}{}", "->> FAILED TO CONNECT TO POSTGRES DATABASE: ".bright_red(),pool.to_string().red());
+                        return;
+                }
+        };
+        let _ = sqlx::migrate!("./migrations").run(&dbpool).await;
 
         let server_local = &database_url[database_url.find("@").unwrap_or(database_url.len())..];
         println!("{} {}", "->> Opened connectiom to postgreSQL database at".red(), server_local.bright_blue());
 
         let client = reqwest::Client::builder().use_rustls_tls().build().unwrap();
         let app_state: types::state::AppState  = types::state::AppState {
-                dbreference: pool,
+                dbreference: dbpool,
                 oauth_client,
                 reqwest_client: client,
         };

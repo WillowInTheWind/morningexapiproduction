@@ -99,21 +99,18 @@ impl MxService for Pool<Postgres> {
         Ok(mx)
     }
     async fn get_mxs_by_owner(&self, owner_id: i32) -> Result<Vec<MorningExercise>, (StatusCode, String)> {
-        println!("{}", owner_id);
         let query : Vec<(i32, i32, i32, NaiveDate, String, String)> = sqlx::query_as
             ("SELECT * FROM MX where owner = 1 ")
             .fetch_all(self)
             .await
             .map_err(|_err| (StatusCode::INTERNAL_SERVER_ERROR, "query failed".to_owned()))?;
 
-        println!("->> MX found");
         let mut mxs: Vec<MorningExercise> = Vec::new();
         for mx in query {
 
             let user = self.get_user_by_id(mx.1)
                 .await
                 .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-            println!("{:?}", user);
             mxs.push(MorningExercise::new(mx.0,user,mx.2,mx.3,mx.4,mx.5, None));
         }
         Ok(mxs)
@@ -133,7 +130,6 @@ impl MxService for Pool<Postgres> {
             let user = self.get_user_by_id(mx.1)
                 .await
                 .map_err(|_err| (StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-            println!("{:?}", user);
             mxs.push(MorningExercise::new(mx.0, user, mx.2, mx.3, mx.4, mx.5, None));
         }
 
@@ -147,7 +143,6 @@ impl MxService for Pool<Postgres> {
         let title: String = mx.title;
         let description: String = mx.description;
 
-        println!("->> Inserting MX");
         let query = sqlx::query(
             r#"INSERT into MX (mx_index, date,owner, title,description) VALUES ($1,$2,$3,$4, $5)"#).bind(
             1).bind(
@@ -214,7 +209,6 @@ impl MxService for Pool<Postgres> {
 
         match query {
             Ok(_q) => {
-                println!("mx creaeted");
                 StatusCode::OK
             }
             Err(_q) => {
