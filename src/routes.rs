@@ -16,6 +16,8 @@ pub fn router(app_state: AppState) -> Router {
         .allow_credentials(true)
         .allow_methods([Method::GET, Method::POST])
         .allow_origin("http://localhost:4200".parse::<HeaderValue>().unwrap());
+
+
     let mx_routes = Router::new()
         .route("/", get(mx_routes::get_all_mxs))
         .layer(middleware::from_fn_with_state(app_state.clone(), middlewares::userisadmin))
@@ -24,6 +26,8 @@ pub fn router(app_state: AppState) -> Router {
         .route("/create", post(mx_routes::post_mx))
         .route("/delete", delete(mx_routes::delete_mx))
         .route("/mine", get(mx_routes::get_users_mxs));
+
+
     let user_routes = Router::new()
         .route("/currentuser", get(user_routes::current_user))
         .route("/setphonenumber", post(user_routes::set_user_number))
@@ -32,10 +36,16 @@ pub fn router(app_state: AppState) -> Router {
         .route("/getbyid/:id", get(user_routes::get_user_by_id))
         .route("/getuserby", get(user_routes::get_user_by))
         .route("/delete", delete(user_routes::delete_user));
+
+
+
     let auth_routes = Router::new()
         .route("/logout", get(login_routes::logout))
         .route("/login", get(login_routes::login))
         .route("/authorized", get(login_routes::login_authorized));
+
+
+
     let routes = Router::new()
         .route("/", get(default_routes::root))
         .nest("/morningexercises", mx_routes)

@@ -1,2 +1,7 @@
 target
 .env
+.dockerignore
+Dockerfile
+postgres
+compose.yaml
+README.Docker.md

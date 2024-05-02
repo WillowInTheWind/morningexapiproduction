@@ -14,6 +14,7 @@ pub static KEYS: Lazy<Keys> = Lazy::new(|| {
 });
 pub static TOKEN_LENGTH_SECONDS: i64 = 12*60*60;
 
+
 pub async fn initialize_environment_variable() -> EnvironmentVariables {
     let address: String = match env::var("HOST") {
         Ok(address) => {address}
@@ -28,6 +29,9 @@ pub async fn initialize_environment_variable() -> EnvironmentVariables {
         port,
     }
 }
+
+
+
 pub fn oauth_client() -> anyhow::Result<BasicClient, AppError> {
     dotenv::dotenv().ok();
     let client_id: ClientId = ClientId::new(env::var("CLIENT_ID").unwrap());
