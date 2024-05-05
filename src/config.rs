@@ -36,7 +36,7 @@ pub fn oauth_client() -> anyhow::Result<BasicClient, AppError> {
     dotenv::dotenv().ok();
     let client_id: ClientId = ClientId::new(env::var("CLIENT_ID").unwrap());
     let client_secret: ClientSecret = ClientSecret::new(env::var("CLIENT_SECRET").unwrap());
-    let redirect_url: String = "http://localhost:4200/auth".to_string();
+    let redirect_url: String = env::var("REDIRECT_URL").unwrap().to_string();
     let redirect_uri: RedirectUrl =RedirectUrl::new(redirect_url).context("failed to create new redirection URL")?;
     let auth_url = "https://accounts.google.com/o/oauth2/v2/auth".to_string();
     let auth_url: AuthUrl = AuthUrl::new(auth_url)
