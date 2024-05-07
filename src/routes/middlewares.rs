@@ -16,12 +16,13 @@ pub async fn auth(
     mut req: Request<Body>,
     next: Next,
 ) -> Result<Response, StatusCode> {
-    let token = get_token_cookie(cookie_jar, &req);
 
+    let token = get_token_cookie(cookie_jar, &req);
     let token = token.ok_or_else(|| {
-        types::internal_types::log_server_route(StatusCode::UNAUTHORIZED
-            , &format!("Unauthorized user attempted to reach '{}'", req.uri()));
-        StatusCode::UNAUTHORIZED
+        {
+            types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, "Failed to find JWT token in users cookies");
+            StatusCode::UNAUTHORIZED
+        }
     })?;
 
     let claims = decode::<Claims>(
@@ -31,17 +32,20 @@ pub async fn auth(
     )
         .map_err(|_e| {
             {
-                types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}'", req.uri()));
+                types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}' and server failed to decode JWT token", req.uri()));
                 StatusCode::UNAUTHORIZED
             }
         })?
         .claims;
 
     let user_id = claims.sub;
-    let user = state.dbreference.get_user_by_id(user_id).await.map_err(|_e|    {
-        types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}'", req.uri()));
-        StatusCode::UNAUTHORIZED
-    })?;
+    let user = state.dbreference.get_user_by_id(user_id).await.map_err(|_e|
+        {
+            types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, "User does not exist");
+            StatusCode::UNAUTHORIZED
+        }
+
+    )?;
     req.extensions_mut().insert(user);
     Ok(next.run(req).await)
 }
@@ -56,7 +60,7 @@ pub async fn userisadmin(
     let token = get_token_cookie(cookie_jar, &req);
     let token = token.ok_or_else(|| {
         {
-            types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}'", req.uri()));
+            types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, "Failed to find JWT token in users cookies");
             StatusCode::UNAUTHORIZED
         }
     })?;
@@ -68,7 +72,7 @@ pub async fn userisadmin(
     )
         .map_err(|_e| {
             {
-                types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}'", req.uri()));
+                types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}' and server failed to decode JWT token", req.uri()));
                 StatusCode::UNAUTHORIZED
             }
         })?
@@ -77,7 +81,7 @@ pub async fn userisadmin(
     let user_id = claims.sub;
     let user = state.dbreference.get_user_by_id(user_id).await.map_err(|_e|
         {
-            types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}'", req.uri()));
+            types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, "User does not exist");
             StatusCode::UNAUTHORIZED
         }
 

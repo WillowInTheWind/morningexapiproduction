@@ -4,18 +4,20 @@ mod mx_routes;
 mod default_routes;
 mod middlewares;
 
+use std::env;
 use axum::{middleware, Router};
 use axum::routing::{delete, get, post};
 use http::{HeaderValue, Method};
 use crate::types::state::AppState;
-use tower_http::cors::CorsLayer;
+use tower_http::cors::{Any, CorsLayer};
 use crate::types::errors;
 
 pub fn router(app_state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_credentials(true)
         .allow_methods([Method::GET, Method::POST])
-        .allow_origin("http://localhost:4200".parse::<HeaderValue>().unwrap());
+        .allow_origin(Any)
+        .allow_origin(env::var("REDIRECT_URL").unwrap().strip_suffix("/auth").unwrap().to_string().parse::<HeaderValue>().unwrap() );
 
     let mx_routes = Router::new()
         .route("/", get(mx_routes::get_all_mxs))
