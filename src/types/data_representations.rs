@@ -1,22 +1,26 @@
-
-
 use sqlx::FromRow;
 use serde::{Deserialize, Serialize};
 use chrono::{ NaiveDate, NaiveDateTime};
 use jsonwebtoken::{DecodingKey, EncodingKey};
-use crate::types::mx_date_algorithm;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub(crate) struct MorningExercise {
     //TODO: add editor value so multiple people can edit the same mx
     id: i32,
-    pub mx_index: i32,
     pub date: NaiveDate,
     pub owner: GoogleUser,
     pub title: String,
     pub description: String,
+    // new shit
+    pub min_grade: i32,
+    pub max_grade: i32,
+    pub young_student_prep_instructions: String,
+    pub is_available_in_day: bool,
+    pub required_tech_json: Vec<String>,
+    pub short_description: String,
+    pub editors_json: Vec<GoogleUser>,
 }
-#[derive(FromRow, Debug, Deserialize, Serialize, Clone)]
+#[derive(FromRow, Debug, Deserialize, Serialize, Clone  )]
 pub struct  GoogleUser {
     pub id: Option<i32>,
     pub sub: String,
@@ -62,37 +66,33 @@ impl CalendarEvent {
 
 impl MorningExercise {
     //constructors
-    pub fn new_with_date(id:i32,
-                         owner: GoogleUser,
-                         date: NaiveDate,
-                         title: String,
-                         description: String,
-                         _editors: Option<Vec<GoogleUser>>)
-                         -> Self {
-        MorningExercise {
-            id,
-            date,
-            mx_index: mx_date_algorithm::weekly_date_to_index() as i32,
-            owner,
-            title ,
-            description ,
-        }
-    }
+
     pub fn new(id:i32,
                owner: GoogleUser,
-               mx_index: i32,
                date: NaiveDate,
                title: String,
                description: String,
-               _editors: Option<GoogleUser>)
-               -> Self {
+                min_grade: i32,
+                max_grade: i32,
+                young_student_prep_instructions: String,
+                is_available_in_day: bool,
+                required_tech_json: Vec<String>,
+                short_description: String,
+                editors_json: Vec<GoogleUser>
+    ) -> Self {
         MorningExercise {
             id,
-            mx_index,
             date,
             owner,
-            title ,
-            description ,
+            title,
+            description,
+            min_grade,
+            max_grade,
+            young_student_prep_instructions,
+            is_available_in_day,
+            required_tech_json,
+            short_description,
+            editors_json,
         }
     }
 }

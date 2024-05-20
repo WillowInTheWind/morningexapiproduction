@@ -26,7 +26,7 @@ pub async fn create_jwt_token(user_id: i32) -> Result<CookieJar, AppError> {
     ).unwrap();
 
     //cookie to store
-    let token_cookie:(&str, String) = ("token", jwt_token);
+    let token_cookie:(&str, String) = ("__session", jwt_token);
     let cookie = Cookie::build
         (
         token_cookie
@@ -45,7 +45,7 @@ pub async fn create_jwt_token(user_id: i32) -> Result<CookieJar, AppError> {
 pub async fn remove_jwt_token() -> Result<CookieJar, AppError> {
     let jar = CookieJar::new().add(
         Cookie::build(
-    ("token", "")
+    ("__session", "")
         )
         .secure(true).path("/")
     );

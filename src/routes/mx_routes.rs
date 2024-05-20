@@ -28,16 +28,28 @@ pub async fn get_users_mxs(
 ) -> Json<Vec<MorningExercise>> {
     types::internal_types::log_server_route(StatusCode::OK, &format!("User {} requested their Mxs", user.name.bright_blue()));
 
-    Json(state.dbreference.get_mxs_by_owner(user.id.unwrap()).await.unwrap())   
+    Json(state.dbreference.get_mxs_by_owner(user.id.unwrap()).await.unwrap())
 }
 #[debug_handler]
 pub async fn post_mx(State(state): State<AppState>,
                      Extension(user): Extension<GoogleUser>,
                      Json(payload): Json<MxPost>) -> StatusCode {
 
+    println!("PRINT DEBUG: tech {:?}, editors {:?}", payload.required_tech_json, payload.editors_json);
 
-    let mx = MorningExercise::new_with_date(
-        1, user.clone(), payload.date, payload.title, payload.description, None
+    let mx = MorningExercise::new(
+        1,
+        user.clone(),
+        payload.date,
+        payload.title,
+        payload.description,
+        payload.max_grade,
+        payload.min_grade,
+        payload.young_student_prep_instructions,
+        payload.is_available_in_day,
+        payload.required_tech_json,
+        payload.short_description,
+        payload.editors_json
     );
 
     types::internal_types::log_server_route(StatusCode::CREATED, &format!("User {} posted a new Mx", user.name.bright_blue()));
@@ -82,7 +94,14 @@ pub async fn delete_mx(State(state): State<AppState>,
 pub struct MxPost {
     date: chrono::NaiveDate,
     title: String,
-    description: String
+    description: String,
+    min_grade: i32,
+    max_grade: i32,
+    young_student_prep_instructions: String,
+    is_available_in_day: bool,
+    required_tech_json: Vec<String>,
+    short_description: String,
+    editors_json: Vec<GoogleUser>
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct  Mxcalendarbody {

@@ -56,7 +56,6 @@ pub async fn userisadmin(
     req: Request<Body>,
     next: Next,
 ) -> Result<Response, StatusCode> {
-
     let token = get_token_cookie(cookie_jar, &req);
     let token = token.ok_or_else(|| {
         {
@@ -96,8 +95,8 @@ pub async fn userisadmin(
 }
 
 fn get_token_cookie(cookie_jar: CookieJar, req: &Request) -> Option<String> {
-    cookie_jar
-        .get("token")
+    let token  = cookie_jar
+        .get("__session")
         .map(|cookie| cookie.value().to_string())
         .or_else(|| {
             req.headers()
@@ -110,5 +109,6 @@ fn get_token_cookie(cookie_jar: CookieJar, req: &Request) -> Option<String> {
                         None
                     }
                 })
-        })
+        });
+    token
 }
