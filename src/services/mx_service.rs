@@ -14,7 +14,7 @@ pub trait MxService {
     async fn create_mx(&self, mx: MorningExercise) -> StatusCode;
     async fn delete_mx_by_id(&self, id: i64) -> StatusCode;
     async fn delete_mx_by_title(&self, title: &str) -> StatusCode;
-    async fn edit_mx(&self) ->  StatusCode;
+    async fn edit_mx(&self, mxid: i32) ->  StatusCode;
 }
 impl MxService for Pool<Postgres> {
     async fn get_mx_by_id(&self, id: i64) -> Result<MorningExercise, (StatusCode, String)> {
@@ -251,7 +251,22 @@ impl MxService for Pool<Postgres> {
             }
         }
     }
-    async fn edit_mx(&self) -> StatusCode {
-        todo!()
+    async fn edit_mx(&self, mxid: i32) -> StatusCode {
+        let query = sqlx::query("Delete FROM MX WHERE id = ?")
+            .bind(mxid)
+            .fetch_one(self)
+            .await
+            .map_err(|_e| StatusCode::INTERNAL_SERVER_ERROR)
+            ;
+
+        match query {
+            Ok(_q) => {
+                StatusCode::OK
+            }
+            Err(_q) => {
+                StatusCode::INTERNAL_SERVER_ERROR
+            }
+        }
+
     }
 }
