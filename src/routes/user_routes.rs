@@ -2,9 +2,11 @@ use axum::extract::{Path, Query, State};
 use axum::{Extension, Json};
 use axum::response::{IntoResponse, Response};
 use axum_macros::debug_handler;
+use colored::Colorize;
 use http::StatusCode;
 use serde::{Deserialize, Serialize};
 use crate::services::user_manager::UserService;
+use crate::types;
 use crate::types::state::AppState;
 use crate::types::data_representations::{GoogleUser};
 
@@ -13,13 +15,13 @@ pub async fn delete_user() -> Response {
     todo!()
 }
 pub async fn get_user_by_id(Path(params): Path<i32>,State(state): State<AppState>,) -> Json<GoogleUser> {
-    println!("->> User get request by id");
+    types::internal_types::log_server_route(StatusCode::OK, &format!("User requested by id {}", params.to_string().bright_blue()));
 
     Json(state.dbreference.get_user_by_id(params).await.unwrap())
 }
 #[debug_handler]
 pub async fn get_user_by(Query(params): Query<GetUserBy>,State(state): State<AppState>,) -> Result<Json<GoogleUser>, StatusCode> {
-    println!("->> User get request by {}", params.user_property);
+    types::internal_types::log_server_route(StatusCode::OK, &format!("->> User get request by {}", params.user_property.bright_blue()));
 
     match params.user_property.as_str(){
         "email" => {
@@ -42,8 +44,7 @@ pub struct  GetUserBy {
 pub async fn get_all_users(
     State(state): State<AppState>,
 ) -> Json<Vec<GoogleUser>> {
-    println!("->> User get request");
-
+    types::internal_types::log_server_route(StatusCode::OK,"All user data requested");
     Json(state.dbreference.get_users().await.map_err(
         |err|
         (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
@@ -55,17 +56,16 @@ pub async fn current_user(Extension(user): Extension<GoogleUser>) -> Json<Google
 }
 #[debug_handler]
 pub async fn set_user_number(Extension(user): Extension<GoogleUser>, State(state): State<AppState>, Json(payload): Json<PhoneNumber>) -> Result<Response, StatusCode> {
-    println!("->> user {} tried to set phone number", user.name);
 
+    types::internal_types::log_server_route(StatusCode::OK,&format!("User {} attempted to set phone number to {}", user.name.bright_blue(), payload.number.bright_blue()));
     if payload.number.chars().count() != 10 && payload.number.chars().count() != 12 {
         return Err(StatusCode::NOT_ACCEPTABLE)
     }
     if !payload.number  .parse::<i64>().is_ok() {
-        println!("->> phone number was not number");
+        types::internal_types::log_server_route(StatusCode::CREATED,&format!("{} was not a valid phone number", payload.number.bright_blue()));
         return Err(StatusCode::NOT_ACCEPTABLE)
     }
-    println!("->> user {} was succesfully set", user.name);
-
+    types::internal_types::log_server_route(StatusCode::CREATED,&format!("User {} successfully set phone number to {}", user.name.bright_blue(), payload.number.bright_blue()));
     let request = state.dbreference.set_user_phone_number(payload.number, user.id.unwrap()).await.map_err(|_e| StatusCode::INTERNAL_SERVER_ERROR)?;
    Ok(Json(request).into_response())
 }

@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 use chrono::{Datelike, NaiveDate, NaiveDateTime};
+use colored::{Colorize, CustomColor};
+use http::StatusCode;
 
 #[derive(Debug,Deserialize,Serialize)]
 #[allow(non_camel_case_types,non_snake_case)]
@@ -56,4 +58,9 @@ impl DateToString for NaiveDate {
     fn date_to_short_string(&self) -> String {
         format!("{}/{}/{}",self.month(), self.day(), self.year()%1000)
     }
+}
+
+pub fn log_server_route(statuscode: StatusCode, payload: &str) {
+    let time = chrono::offset::Utc::now().to_string();
+    println!("{} {} {} {}", time.custom_color(CustomColor::new(100,100,100)), statuscode.as_str().green(), "Morning-Ex-Api:".custom_color(CustomColor::new(100,100,100)), payload)
 }
