@@ -6,7 +6,7 @@ use jsonwebtoken::{DecodingKey, EncodingKey};
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub(crate) struct MorningExercise {
     //TODO: add editor value so multiple people can edit the same mx
-    id: i32,
+    pub id: i32,
     pub date: NaiveDate,
     pub owner: GoogleUser,
     pub title: String,

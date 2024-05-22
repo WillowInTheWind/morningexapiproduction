@@ -1,6 +1,7 @@
 use axum::http::StatusCode;
 use chrono::NaiveDate;
 use sqlx::{Pool, Postgres};
+use tokio::io::AsyncBufReadExt;
 use crate::services::user_manager::UserService;
 use crate::types::data_representations::{GoogleUser, MorningExercise};
 
@@ -252,8 +253,33 @@ impl MxService for Pool<Postgres> {
         }
     }
     async fn edit_mx(&self, mxid: i32) -> StatusCode {
-        let query = sqlx::query("Delete FROM MX WHERE id = ?")
-            .bind(mxid)
+        let mx = self.get_mx_by_id(mxid as i64).await.unwrap();
+        let editors = mx.editors_json;
+        let query = sqlx::query("
+        UPDATE MX SET
+         date = $1,
+         owner = $2,
+         title= $3,
+         description= $4,
+         min_grade= $5,
+         max_grade= $6,
+         young_student_prep_instructions= $7,
+         is_available_in_day= $8,
+         required_tech_json= $9,
+         short_description= $10,
+         editors_json= $11
+         WHERE id = $12")
+            .bind(mx.date)
+            .bind(mx.owner.id.unwrap())
+            .bind(mx.title)
+            .bind(mx.description)
+            .bind(mx.min_grade)
+            .bind(mx.max_grade)
+            .bind(mx.young_student_prep_instructions)
+            .bind(mx.is_available_in_day)
+            .bind(mx.required_tech_json)
+            .bind(mx.short_description)
+            .bind(editors)
             .fetch_one(self)
             .await
             .map_err(|_e| StatusCode::INTERNAL_SERVER_ERROR)
