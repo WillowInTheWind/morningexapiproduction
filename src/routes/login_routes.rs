@@ -57,7 +57,7 @@ pub(crate) async fn login_authorized(
         picture: user_data.picture,
         email: user_data.email,
         name: user_data.name.clone(),
-        token: Some(token.access_token().secret().to_string()),
+        token: Some(token.refresh_token().secret().to_string()),
         phone_number: None
     };
 

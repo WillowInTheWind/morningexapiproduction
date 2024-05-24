@@ -35,7 +35,8 @@ pub async fn post_mx(State(state): State<AppState>,
                      Extension(user): Extension<GoogleUser>,
                      Json(payload): Json<MxPost>) -> StatusCode {
 
-    println!("PRINT DEBUG: tech {:?}, editors {:?}", payload.required_tech_json, payload.editors_json);
+    let editors = types::internal_types::string_to_list( payload.editors_json).unwrap();
+    let reqtech = types::internal_types::string_to_list( payload.required_tech_json).unwrap();
 
     let mx = MorningExercise::new(
         1,
@@ -47,9 +48,9 @@ pub async fn post_mx(State(state): State<AppState>,
         payload.min_grade,
         payload.young_student_prep_instructions,
         payload.is_available_in_day,
-        payload.required_tech_json,
+        reqtech,
         payload.short_description,
-        payload.editors_json
+        editors
     );
 
     types::internal_types::log_server_route(StatusCode::CREATED, &format!("User {} posted a new Mx", user.name.bright_blue()));
@@ -99,9 +100,9 @@ pub struct MxPost {
     max_grade: i32,
     young_student_prep_instructions: String,
     is_available_in_day: bool,
-    required_tech_json: Vec<String>,
+    required_tech_json: String,
     short_description: String,
-    editors_json: Vec<GoogleUser>
+    editors_json: String
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct  Mxcalendarbody {

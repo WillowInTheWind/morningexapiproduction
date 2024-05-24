@@ -18,7 +18,8 @@ pub(crate) struct MorningExercise {
     pub is_available_in_day: bool,
     pub required_tech_json: Vec<String>,
     pub short_description: String,
-    pub editors_json: Vec<GoogleUser>,
+    pub editors_json: Vec<i32>,
+    pub is_approved: bool
 }
 #[derive(FromRow, Debug, Deserialize, Serialize, Clone  )]
 pub struct  GoogleUser {
@@ -66,7 +67,6 @@ impl CalendarEvent {
 
 impl MorningExercise {
     //constructors
-
     pub fn new(id:i32,
                owner: GoogleUser,
                date: NaiveDate,
@@ -78,7 +78,7 @@ impl MorningExercise {
                 is_available_in_day: bool,
                 required_tech_json: Vec<String>,
                 short_description: String,
-                editors_json: Vec<GoogleUser>
+                editors_json: Vec<i32>
     ) -> Self {
         MorningExercise {
             id,
@@ -93,6 +93,7 @@ impl MorningExercise {
             required_tech_json,
             short_description,
             editors_json,
+            is_approved: false
         }
     }
 }

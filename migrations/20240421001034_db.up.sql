@@ -24,6 +24,7 @@ CREATE TABLE MX (
      required_tech_json TEXT NOT NULL,
      short_description TEXT NOT NULL,
      editors_json TEXT NOT NULL,
+     is_approved BOOLEAN NOT NULL
 --     FOREIGN KEY(owner) REFERENCES user(id)
 );
 -- Add up migration script here

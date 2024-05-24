@@ -3,6 +3,7 @@ use chrono::NaiveDate;
 use sqlx::{Pool, Postgres};
 use tokio::io::AsyncBufReadExt;
 use crate::services::user_manager::UserService;
+use crate::types;
 use crate::types::data_representations::{GoogleUser, MorningExercise};
 
 pub trait MxService {
@@ -26,7 +27,7 @@ impl MxService for Pool<Postgres> {
                             bool,
                             String,
                             String,
-                            String), _> = sqlx::query_as
+                            String,bool), _> = sqlx::query_as
             ("SELECT * FROM MX WHERE id = ?")
             .bind(id)
             .fetch_one(self)
@@ -34,12 +35,12 @@ impl MxService for Pool<Postgres> {
 
         let mx = match query {
             Ok(query) => {
-                let editors: Vec<String> = serde_json::from_str(&query.9).unwrap();
-                let reqtech: Vec<GoogleUser> = serde_json::from_str(&query.11).unwrap();
+                let editors: Vec<i32> =  types::internal_types::string_to_list::<i32>(query.11).unwrap();
+                let reqtech: Vec<String> =types::internal_types::string_to_list::<String>(query.9).unwrap();
                 let user = self.get_user_by_id(query.1 as i32)
                     .await
                     .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, editors, query.10, reqtech)
+                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, reqtech, query.10, editors)
             }
             Err(_e) => {
                 return Err((StatusCode::NOT_FOUND, "No such MXs".to_string()))
@@ -55,7 +56,7 @@ impl MxService for Pool<Postgres> {
                             bool,
                             String,
                             String,
-                            String), _> = sqlx::query_as
+                            String, bool), _> = sqlx::query_as
             ("SELECT * FROM MX WHERE date = ?")
             .bind(date)
             .fetch_one(self)
@@ -63,12 +64,12 @@ impl MxService for Pool<Postgres> {
 
         let mx = match query {
             Ok(query) => {
-                let editors: Vec<String> = serde_json::from_str(&query.9).unwrap();
-                let reqtech: Vec<GoogleUser> = serde_json::from_str(&query.11).unwrap();
+                let editors: Vec<i32> =  types::internal_types::string_to_list::<i32>(query.11).unwrap();
+                let reqtech: Vec<String> =types::internal_types::string_to_list::<String>(query.9).unwrap();
                 let user = self.get_user_by_id(query.1 as i32)
                     .await
                     .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, editors, query.10, reqtech)
+                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, reqtech, query.10, editors)
             }
             Err(_query) => {
                 return Err((StatusCode::NOT_FOUND, "No such MXs".to_string()))
@@ -84,7 +85,7 @@ impl MxService for Pool<Postgres> {
                             bool,
                             String,
                             String,
-                            String), _> = sqlx::query_as
+                            String, bool), _> = sqlx::query_as
             ("SELECT * FROM MX WHERE mx_index = ?")
             .bind(index)
             .fetch_one(self)
@@ -92,12 +93,12 @@ impl MxService for Pool<Postgres> {
 
         let mx = match query {
             Ok(query) => {
-                let editors: Vec<String> = serde_json::from_str(&query.9).unwrap();
-                let reqtech: Vec<GoogleUser> = serde_json::from_str(&query.11).unwrap();
+                let editors: Vec<i32> =  types::internal_types::string_to_list::<i32>(query.11).unwrap();
+                let reqtech: Vec<String> =types::internal_types::string_to_list::<String>(query.9).unwrap();
                 let user = self.get_user_by_id(query.1 as i32)
                     .await
                     .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, editors, query.10, reqtech)
+                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, reqtech, query.10, editors)
             }
             Err(_e) => {
                 return Err((StatusCode::NOT_FOUND, "No such MXs".to_string()))
@@ -113,7 +114,7 @@ impl MxService for Pool<Postgres> {
                             bool,
                             String,
                             String,
-                            String), _> = sqlx::query_as
+                            String,bool), _> = sqlx::query_as
             ("SELECT * FROM MX WHERE title = ?")
             .bind(title)
             .fetch_one(self)
@@ -121,12 +122,13 @@ impl MxService for Pool<Postgres> {
 
         let mx = match query {
             Ok(query) => {
-                let editors: Vec<String> = serde_json::from_str(&query.9).unwrap();
-                let reqtech: Vec<GoogleUser> = serde_json::from_str(&query.11).unwrap();
+                let editors: Vec<i32> =  types::internal_types::string_to_list::<i32>(query.11).unwrap();
+                let reqtech: Vec<String> =types::internal_types::string_to_list::<String>(query.9).unwrap();
+
                 let user = self.get_user_by_id(query.1 as i32)
                     .await
                     .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, editors, query.10, reqtech)
+                MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, reqtech, query.10, editors)
             }
             Err(_e) => {
                 return Err((StatusCode::NOT_FOUND, "No such MXs".to_string()))
@@ -142,7 +144,7 @@ impl MxService for Pool<Postgres> {
                          bool,
                          String,
                          String,
-                         String)> = sqlx::query_as("SELECT * FROM MX")
+                         String,bool)> = sqlx::query_as("SELECT * FROM MX WHERE owner = $1").bind(owner_id)
             .fetch_all(self)
             .await
             .map_err(|_e| (StatusCode::INTERNAL_SERVER_ERROR, "query failed".to_string()))?;
@@ -150,12 +152,12 @@ impl MxService for Pool<Postgres> {
         let mut mxs: Vec<MorningExercise> = Vec::new();
         for mx in query {
 
-            let editors: Vec<String> = serde_json::from_str(&mx.9).unwrap();
-            let reqtech: Vec<GoogleUser> = serde_json::from_str(&mx.11).unwrap();
+            let editors: Vec<i32> =  types::internal_types::string_to_list::<i32>(mx.11).unwrap();
+            let reqtech: Vec<String> =types::internal_types::string_to_list::<String>(mx.9).unwrap();
             let user = self.get_user_by_id(mx.1)
                 .await
                 .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-            mxs.push(MorningExercise::new(mx.0,user,mx.2,mx.3,mx.4, mx.5,mx.6, mx.7, mx.8, editors, mx.10, reqtech));
+            mxs.push(MorningExercise::new(mx.0,user,mx.2,mx.3,mx.4, mx.5,mx.6, mx.7, mx.8, reqtech, mx.10, editors));
 
         }
         Ok(mxs)
@@ -170,7 +172,7 @@ impl MxService for Pool<Postgres> {
             bool,
             String,
             String,
-            String)> = sqlx::query_as("SELECT * FROM MX")
+            String, bool)> = sqlx::query_as("SELECT * FROM MX")
             .fetch_all(self)
             .await
             .map_err(|_e| (StatusCode::INTERNAL_SERVER_ERROR, "query failed".to_string()))?;
@@ -179,12 +181,12 @@ impl MxService for Pool<Postgres> {
 
         let mut mxs: Vec<MorningExercise> = Vec::new();
         for mx in query {
-            let editors: Vec<String> = serde_json::from_str(&mx.9).unwrap();
-            let reqtech: Vec<GoogleUser> = serde_json::from_str(&mx.11).unwrap();
+            let editors: Vec<i32> =  types::internal_types::string_to_list::<i32>(mx.11).unwrap();
+            let reqtech: Vec<String> =types::internal_types::string_to_list::<String>(mx.9).unwrap();
             let user = self.get_user_by_id(mx.1)
                 .await
                 .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR, "GetUserFailed".to_string()))?;
-            mxs.push(MorningExercise::new(mx.0,user,mx.2,mx.3,mx.4, mx.5,mx.6, mx.7, mx.8, editors, mx.10, reqtech));
+            mxs.push(MorningExercise::new(mx.0,user,mx.2,mx.3,mx.4, mx.5,mx.6, mx.7, mx.8, reqtech, mx.10, editors));
         }
 
 
@@ -253,46 +255,47 @@ impl MxService for Pool<Postgres> {
         }
     }
     async fn edit_mx(&self, mxid: i32) -> StatusCode {
-        let mx = self.get_mx_by_id(mxid as i64).await.unwrap();
-        let editors = mx.editors_json;
-        let query = sqlx::query("
-        UPDATE MX SET
-         date = $1,
-         owner = $2,
-         title= $3,
-         description= $4,
-         min_grade= $5,
-         max_grade= $6,
-         young_student_prep_instructions= $7,
-         is_available_in_day= $8,
-         required_tech_json= $9,
-         short_description= $10,
-         editors_json= $11
-         WHERE id = $12")
-            .bind(mx.date)
-            .bind(mx.owner.id.unwrap())
-            .bind(mx.title)
-            .bind(mx.description)
-            .bind(mx.min_grade)
-            .bind(mx.max_grade)
-            .bind(mx.young_student_prep_instructions)
-            .bind(mx.is_available_in_day)
-            .bind(mx.required_tech_json)
-            .bind(mx.short_description)
-            .bind(editors)
-            .fetch_one(self)
-            .await
-            .map_err(|_e| StatusCode::INTERNAL_SERVER_ERROR)
-            ;
-
-        match query {
-            Ok(_q) => {
-                StatusCode::OK
-            }
-            Err(_q) => {
-                StatusCode::INTERNAL_SERVER_ERROR
-            }
-        }
+        todo!()
+        // let mx = self.get_mx_by_id(mxid as i64).await.unwrap();
+        // let editors = mx.editors_json;
+        // let query = sqlx::query("
+        // UPDATE MX SET
+        //  date = $1,
+        //  owner = $2,
+        //  title= $3,
+        //  description= $4,
+        //  min_grade= $5,
+        //  max_grade= $6,
+        //  young_student_prep_instructions= $7,
+        //  is_available_in_day= $8,
+        //  required_tech_json= $9,
+        //  short_description= $10,
+        //  editors_json= $11
+        //  WHERE id = $12")
+        //     .bind(mx.date)
+        //     .bind(mx.owner.id.unwrap())
+        //     .bind(mx.title)
+        //     .bind(mx.description)
+        //     .bind(mx.min_grade)
+        //     .bind(mx.max_grade)
+        //     .bind(mx.young_student_prep_instructions)
+        //     .bind(mx.is_available_in_day)
+        //     .bind(mx.required_tech_json)
+        //     .bind(mx.short_description)
+        //     .bind(editors)
+        //     .fetch_one(self)
+        //     .await
+        //     .map_err(|_e| StatusCode::INTERNAL_SERVER_ERROR)
+        //     ;
+        //
+        // match query {
+        //     Ok(_q) => {
+        //         StatusCode::OK
+        //     }
+        //     Err(_q) => {
+        //         StatusCode::INTERNAL_SERVER_ERROR
+        //     }
+        // }
 
     }
 }
