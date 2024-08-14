@@ -17,18 +17,20 @@ use crate::types::internal_types::AuthRequest;
 pub(crate) async fn login_authorized(
     State(state): State<AppState>,
     State(oauth_client): State<BasicClient>,
-    Query(query): Query<AuthRequest>) -> Result<Response, AppError> {
+    Query(query): Query<AuthRequest>) -> Result<Response, AppError>
+{
     let token = oauth_client
         .exchange_code(AuthorizationCode::new(query.code))
         .request_async(async_http_client)
         .await?;
+
     // Fetch user data from Google
     let user_data/* Type */ = state.reqwest_client
         .get("https://www.googleapis.com/oauth2/v3/userinfo")
         .bearer_auth(token.access_token().secret())
         .send()
         .await
-        .context("failed in sending request to target Url")?
+        .context("faiGoogleUserled in sending request to target Url")?
         .json::<GoogleUser>()
         .await
         .context("failed to deserialize response as JSON")?
@@ -57,11 +59,13 @@ pub(crate) async fn login_authorized(
         picture: user_data.picture,
         email: user_data.email,
         name: user_data.name.clone(),
-        token: Some(token.refresh_token().secret().to_string()),
-        phone_number: None
+        token: Some(token.refresh_token().unwrap().secret().to_string()),
+        phone_number: None,
+        is_admin: Some(false)
     };
 
     let user_id = state.dbreference.create_user(user).await?;
+    println!("{}", user_id);
     let jar = jwt::create_jwt_token(user_id).await?;
     types::internal_types::log_server_route(StatusCode::CREATED, &format!("User {} was created",&user_data.name));
 
@@ -91,7 +95,7 @@ pub(crate) async fn login(State(client): State<BasicClient>) -> Response {
         .add_scope(Scope::new("email".to_string()))
         .url();
 
-    let url = auth_url.to_string();
+    let url = auth_url.to_string() + "&" + "access_type=offline&prompt=consent";
     let authurl = Json(url);
     authurl.into_response()
     // Redirect::to(&auth_url.to_string()).into_response()

@@ -7,6 +7,7 @@ CREATE TABLE googleusers (
     name TEXT UNIQUE NOT NULL,
     token TEXT UNIQUE,
     phone_number TEXT
+    is_admin BOOLEAN NOT NULL
 --     calendar TEXT UNIQUE NOT NULL
 );
 

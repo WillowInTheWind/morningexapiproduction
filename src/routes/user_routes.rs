@@ -19,6 +19,13 @@ pub async fn get_user_by_id(Path(params): Path<i32>,State(state): State<AppState
 
     Json(state.dbreference.get_user_by_id(params).await.unwrap())
 }
+pub async fn make_admin_user(Json(payload): Json<ID>,State(state): State<AppState>) -> StatusCode {
+    state.dbreference.make_user_admin(payload.id).await.unwrap()
+}
+
+pub struct ID {
+    id: i32
+}
 #[debug_handler]
 pub async fn get_user_by(Query(params): Query<GetUserBy>,State(state): State<AppState>,) -> Result<Json<GoogleUser>, StatusCode> {
     types::internal_types::log_server_route(StatusCode::OK, &format!("->> User get request by {}", params.user_property.bright_blue()));
@@ -61,7 +68,7 @@ pub async fn set_user_number(Extension(user): Extension<GoogleUser>, State(state
     if payload.number.chars().count() != 10 && payload.number.chars().count() != 12 {
         return Err(StatusCode::NOT_ACCEPTABLE)
     }
-    if !payload.number  .parse::<i64>().is_ok() {
+    if !payload.number.parse::<i64>().is_ok() {
         types::internal_types::log_server_route(StatusCode::CREATED,&format!("{} was not a valid phone number", payload.number.bright_blue()));
         return Err(StatusCode::NOT_ACCEPTABLE)
     }

@@ -31,3 +31,4 @@ once_cell = "1.19.0"
 tower = "0.4.13"
 tower-http = { version = "0.5.2", features = ["cors"] }
 colored = "2.1.0"
+sha256 = "1.5.0"

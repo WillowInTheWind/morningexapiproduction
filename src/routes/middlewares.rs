@@ -1,3 +1,4 @@
+use std::env;
 use axum::body::Body;
 use axum::extract::{Request, State};
 use axum::middleware::Next;
@@ -7,9 +8,12 @@ use jsonwebtoken::{decode, Validation};
 use crate::services::user_manager::UserService;
 use crate::types::state::AppState;
 use axum_extra::extract::cookie::CookieJar;
+use axum_macros::debug_handler;
 use crate::config::KEYS;
 use crate::types;
 use crate::types::data_representations::{Claims};
+
+
 pub async fn auth(
     cookie_jar: CookieJar,
     State(state): State<AppState>,
@@ -50,6 +54,7 @@ pub async fn auth(
     Ok(next.run(req).await)
 }
 
+
 pub async fn userisadmin(
     cookie_jar: CookieJar,
     State(state): State<AppState>,
@@ -86,10 +91,13 @@ pub async fn userisadmin(
 
     )?;
 
-    if user.email != "wayland.chase@gmail.com" {
-        types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}'", req.uri()));
-        return Err(StatusCode::UNAUTHORIZED);
+    if (user.email != "wayland.chase@gmail.com") {
+        if (!user.is_admin.unwrap()) {
+            types::internal_types::log_server_route(StatusCode::UNAUTHORIZED, &format!("Non Admin user attempted to reach '{}'", req.uri()));
+            return Err(StatusCode::UNAUTHORIZED);
+        }
     }
+
 
     Ok(next.run(req).await)
 }
@@ -111,4 +119,8 @@ fn get_token_cookie(cookie_jar: CookieJar, req: &Request) -> Option<String> {
                 })
         });
     token
+}
+
+fn is_valid_key(key: &str) -> bool {
+    key == env::var("TEMP_MASTER_KEY").unwrap()
 }

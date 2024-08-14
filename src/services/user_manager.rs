@@ -1,5 +1,5 @@
 use http::StatusCode;
-use sqlx::{Pool, Error, Postgres};
+use sqlx::{Pool, Error, Postgres, query};
 use crate::types::data_representations::{ GoogleUser};
 
 pub(crate) trait UserService: Send + Sync {
@@ -9,6 +9,7 @@ pub(crate) trait UserService: Send + Sync {
     async fn get_user_by_name(&self, name:&str) -> Result<GoogleUser, sqlx::Error>;
     async fn get_user_by_sub(&self, sub:&str) -> Result<GoogleUser, sqlx::Error>;
     async fn get_user_by_email(&self, email:&str) -> Result<GoogleUser, sqlx::Error>;
+    async fn make_user_admin(&self, id: i32) -> Result<StatusCode, Error>;
 
     async fn create_user(&self, new_user: GoogleUser) -> Result<i32, sqlx::Error>;
 
@@ -70,23 +71,32 @@ impl UserService for Pool<Postgres> {
         query
     }
 
+    async fn make_user_admin(&self, id: i32) -> Result<StatusCode, Error> {
+        sqlx::query(
+            "Update GoogleUsers SET is_admin = TRUE where id = $2",
+
+        )
+            .bind(id)
+            .fetch_one(self)
+            .await?
+        ;
+
+        Ok(StatusCode::CREATED)
+    }
     async fn create_user(&self, new_user: GoogleUser) -> Result<i32, Error> {
         let token = new_user.token.unwrap().clone();
         let _query =
-            sqlx::query(
-                r#"INSERT into GoogleUsers (sub, picture, email, name, token) values ($1,$2, $3, $4, $5) RETURNING id
-"#,
+            sqlx::query("INSERT into GoogleUsers (sub, picture, email, name, token, is_admin) values ($1,$2, $3, $4, $5, $6) RETURNING *",
             ).bind(new_user.sub
             ).bind(new_user.picture
             ).bind(new_user.email
-            ).bind(new_user.name
+            ).bind(new_user.name.clone()
             ).bind(token
-            )
+            ).bind(new_user.is_admin.unwrap())
                 .fetch_one(self)
                 .await?;
-
-
-        Ok(200)
+        let user = self.get_user_by_name(&new_user.name).await.unwrap().id;
+        Ok(user.unwrap())
     }
 
     async fn delete_user_by_id(&self, id: i32) -> Result<StatusCode, Error> {

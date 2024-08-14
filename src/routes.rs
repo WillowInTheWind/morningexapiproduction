@@ -3,6 +3,7 @@ mod login_routes;
 mod mx_routes;
 mod default_routes;
 mod middlewares;
+mod api_routes;
 
 use std::env;
 use axum::{middleware, Router};
@@ -26,9 +27,15 @@ pub fn router(app_state: AppState) -> Router {
         .route("/approve", post(mx_routes::approve_mx))
         .route("/create", post(mx_routes::post_mx))
         .route("/delete", delete(mx_routes::delete_mx))
-        .route("/mine", get(mx_routes::get_users_mxs));
+        .route("/getbytitle", get(mx_routes::get_user_mx_by_title))
+        .route("/mine", get(mx_routes::get_users_mxs))
+        .route("/filterby", get(mx_routes::filter_mxs_by_sql));
+
+    let api_routes = Router::new()
+        .route("/upcoming", get(api_routes::get_planned_mxs));
 
     let user_routes = Router::new()
+        // .route("/makeuseradmin/:id", post(user_routes::make_admin_user()))
         .route("/currentuser", get(user_routes::current_user))
         .route("/setphonenumber", post(user_routes::set_user_number))
         .layer(middleware::from_fn_with_state(app_state.clone(), middlewares::auth))
@@ -48,6 +55,7 @@ pub fn router(app_state: AppState) -> Router {
         .layer(middleware::from_fn_with_state(app_state.clone(), middlewares::auth))
         .nest("/users", user_routes)
         .nest("/auth", auth_routes)
+        .nest("/external", api_routes)
         .fallback(errors::error_404)
         .with_state(app_state);
 

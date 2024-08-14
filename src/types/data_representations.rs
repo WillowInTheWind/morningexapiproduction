@@ -29,7 +29,8 @@ pub struct  GoogleUser {
     pub email: String,
     pub name: String,
     pub token: Option<String>,
-    pub phone_number: Option<String>
+    pub phone_number: Option<String>,
+    pub is_admin: Option<bool>
 }
 
 #[derive(Debug,Deserialize,Serialize)]
@@ -78,7 +79,8 @@ impl MorningExercise {
                 is_available_in_day: bool,
                 required_tech_json: Vec<String>,
                 short_description: String,
-                editors_json: Vec<i32>
+                editors_json: Vec<i32>,
+                is_approved: bool
     ) -> Self {
         MorningExercise {
             id,
@@ -93,7 +95,7 @@ impl MorningExercise {
             required_tech_json,
             short_description,
             editors_json,
-            is_approved: false
+            is_approved
         }
     }
 }

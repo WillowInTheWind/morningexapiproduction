@@ -57,7 +57,7 @@ impl DateToString for NaiveDate {
 
     }
     fn date_to_short_string(&self) -> String {
-        format!("{}/{}/{}",self.month(), self.day(), self.year()%1000)
+        format!("{}-{}-{}",self.month(), self.day(), self.year()%1000)
     }
 }
 
@@ -72,14 +72,18 @@ pub fn list_to_string<T>(list: Vec<T>) -> String where T: std::fmt::Display {
         let number = user.to_string() + "::";
         output_string.push_str(&number);
     }
-    println!("PRINT DEBUG: value is {:?}", &output_string);
     output_string
 }
 pub fn string_to_list<T: std::str::FromStr>(list: String) -> Result<Vec<T>, String> {
     let list_str: Vec<&str> = list.split("::").collect();
     let mut returned_list: Vec<T> = vec![];
+    if list_str.len() == 0 { return Ok( returned_list )}
     for number in list_str {
-        returned_list.push(number.parse::<T>().map_err(|e|"Input not a valid list of User Id's".to_owned())?)
+        let mut number: Result<T, &str> = number.parse::<T>().map_err(|e| "oops");
+        if number.is_err() {
+            continue
+        }
+        returned_list.push(number?);
     }
     Ok(returned_list)
 }
