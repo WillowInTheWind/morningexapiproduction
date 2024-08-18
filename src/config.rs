@@ -13,6 +13,7 @@ pub static KEYS: Lazy<Keys> = Lazy::new(|| {
     Keys::new(secret.as_bytes())
 });
 pub static TOKEN_LENGTH_SECONDS: i64 = 12*60*60;
+pub static MORNING_EX_ADMIN_ACCOUNT: i32 = 8;
 
 
 pub async fn initialize_environment_variable() -> EnvironmentVariables {

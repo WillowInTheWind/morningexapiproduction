@@ -30,7 +30,7 @@ pub(crate) async fn login_authorized(
         .bearer_auth(token.access_token().secret())
         .send()
         .await
-        .context("faiGoogleUserled in sending request to target Url")?
+        .context("failed in sending request to target Url")?
         .json::<GoogleUser>()
         .await
         .context("failed to deserialize response as JSON")?
@@ -41,7 +41,7 @@ pub(crate) async fn login_authorized(
             .bind(&user_data.name)
             .fetch_one(&state.dbreference)
             .await
-            .context("failed in finding if user exists").unwrap();
+            .context("failed in finding if user exists")?;
 
     types::internal_types::log_server_route(StatusCode::CREATED, &format!("User {} was created",user_data.name));
 
@@ -90,7 +90,7 @@ pub(crate) async fn login(State(client): State<BasicClient>) -> Response {
 
     let (auth_url, _csrf_token) = client
         .authorize_url(CsrfToken::new_random)
-        .add_scope(Scope::new("https://www.googleapis.com/auth/calendar".to_string()))
+        // .add_scope(Scope::new("https://www.googleapis.com/auth/calendar".to_string()))
         .add_scope(Scope::new("profile".to_string()))
         .add_scope(Scope::new("email".to_string()))
         .url();

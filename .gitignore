@@ -2,4 +2,5 @@ target
 .env
 postgres
 compose.yaml
+.dockerignore
 README.Docker.md
