@@ -33,7 +33,7 @@ impl MxService for Pool<Postgres> {
                             String,
                             String,
                             String,bool), _> = sqlx::query_as
-            ("SELECT * FROM MX WHERE id = ?")
+            ("SELECT * FROM MX WHERE id = $1")
             .bind(id)
             .fetch_one(self)
             .await;
@@ -47,8 +47,8 @@ impl MxService for Pool<Postgres> {
                     .map_err(|_err|(StatusCode::INTERNAL_SERVER_ERROR,  "Failed to find User associated with MX".to_string()))?;
                 MorningExercise::new(query.0,user,query.2,query.3,query.4, query.5,query.6, query.7, query.8, reqtech, query.10, editors,query.12)
             }
-            Err(_e) => {
-                return Err((StatusCode::NOT_FOUND, "No such MXs".to_string()))
+            Err(e) => {
+                return Err((StatusCode::NOT_FOUND, format!("{:?}",e)))
             }
         };
         Ok(mx)
@@ -241,11 +241,10 @@ impl MxService for Pool<Postgres> {
 
     }
     async fn delete_mx_by_id(&self, id: i64) -> (StatusCode,String) {
-       let query = sqlx::query("Delete FROM MX WHERE id = ?")
+       let query = sqlx::query("DELETE FROM MX WHERE id = $1")
             .bind(id)
             .fetch_one(self)
             .await
-            .map_err(|_err| StatusCode::INTERNAL_SERVER_ERROR)
             ;
 
         match query {
@@ -275,35 +274,13 @@ impl MxService for Pool<Postgres> {
         }
     }
     async fn edit_mx(&self, mx: MorningExercise) ->  (StatusCode,String) {
-        let query = sqlx::query("
-        UPDATE MX SET
-         date = $1,
-         owner = $2,
-         Title= $3,
-         description= $4,
-         min_grade= $5,
-         max_grade= $6,
-         young_student_prep_instructions= $7,
-         is_available_in_day= $8,
-         required_tech_json= $9,
-         short_description= $10,
-         editors_json= $11,
-        is_approved = FALSE
-         WHERE id = $12")
-            .bind(mx.date)
-            .bind(mx.owner.id.unwrap())
-            .bind(mx.title)
-            .bind(mx.description)
-            .bind(mx.min_grade)
-            .bind(mx.max_grade)
-            .bind(mx.young_student_prep_instructions)
-            .bind(mx.is_available_in_day)
-            .bind(list_to_string(mx.required_tech_json))
-            .bind(mx.short_description)
-            .bind(list_to_string(mx.editors_json))
-            .fetch_one(self)
+        types::internal_types::log_server_route(StatusCode::OK, &mx.id.to_string());
+        let query_string = format!("UPDATE MX SET date = '{}', title= '{}', description= '{}', min_grade= {}, max_grade= {},young_student_prep_instructions= '{}',is_available_in_day= {},required_tech_json= '{}',short_description= '{}',editors_json= '{}',is_approved = FALSE WHERE id = {}", mx.date, mx.title.replace("'", "''"), mx.description.replace("'", "''"), mx.min_grade.to_string(), mx.max_grade.to_string(), mx.young_student_prep_instructions.replace("'", "''"), mx.is_available_in_day.to_string() == "true", types::internal_types::list_to_string(mx.required_tech_json), mx.short_description, list_to_string(mx.editors_json), mx.id);
+        println!("{}", query_string);
+        let query = sqlx::query(&query_string)
+            .execute(self)
             .await
-            .map_err(|_e| StatusCode::INTERNAL_SERVER_ERROR)
+            // .map_err(|_e| StatusCode::INTERNAL_SERVER_ERROR)
             ;
 
         match query {
@@ -311,7 +288,9 @@ impl MxService for Pool<Postgres> {
                 (StatusCode::OK, "Succesfully Edited".to_string())
             }
             Err(q) => {
-                (StatusCode::INTERNAL_SERVER_ERROR, format!("ERROR Editing mx - {:?}", q))
+                types::internal_types::log_server_route(StatusCode::INTERNAL_SERVER_ERROR, &format!("ERROR Editing mx - {:?}", q));
+
+                    (StatusCode::INTERNAL_SERVER_ERROR, format!("ERROR Editing mx - {:?}", q))
             }
         }
 

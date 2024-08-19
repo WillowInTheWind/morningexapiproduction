@@ -1,4 +1,5 @@
 use std::string::String;
+use async_session::hmac::digest::generic_array::typenum::private::IsNotEqualPrivate;
 use axum::extract::{Path, Query, State};
 use axum::{Extension, Json};
 use axum::response::{IntoResponse, Response};
@@ -7,6 +8,7 @@ use axum::http::StatusCode;
 use chrono::NaiveDate;
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use sqlx::query;
 use crate::routes::user_routes::GetUserBy;
 use crate::types::state::AppState;
@@ -16,6 +18,7 @@ use crate::services::user_manager::UserService;
 use crate::{config, types};
 
 use crate::types::data_representations::{GoogleUser, MorningExercise};
+use crate::types::internal_types::string_to_list;
 
 #[debug_handler]
 pub async fn filter_mxs_by_sql(State(state): State<AppState>,
@@ -53,39 +56,40 @@ pub async fn get_users_mxs(
     Json(state.dbreference.get_mxs_by_owner(user.id.unwrap()).await.unwrap())
 }
 
-
+#[debug_handler]
 pub async fn edit_mx(
     Extension(user): Extension<GoogleUser>,
     State(state): State<AppState>,
-    Json(payload): Json<MxPost>) -> (StatusCode, String) {
+    Json(payload): Json<MxEdit>) -> (StatusCode, String) {
+        let mx: MorningExercise = state.dbreference.get_mx_by_id(payload.id).await.unwrap();
+        if !(user.name == mx.owner.name || mx.editors_json.contains(&user.id.unwrap()) ||  (user.is_admin.is_some() && user.is_admin.unwrap())) {
+            return (StatusCode::UNAUTHORIZED, "You do not have permission to edit mx".to_string())
+        }
+        let mut reqtech = string_to_list(payload.required_tech_json).unwrap();
+        reqtech.retain(|x| x!="");
+    let mut editors = string_to_list(payload.editors_json).unwrap();
 
-        let editors = types::internal_types::string_to_list( payload.editors_json).unwrap();
-
-        let reqtech = types::internal_types::string_to_list( payload.required_tech_json).unwrap();
-
-        let mx = MorningExercise::new(
-            1,
-            user.clone(),
-            payload.date,
-            payload.title,
-            payload.description,
-            payload.min_grade,
-            payload.max_grade,
-            payload.young_student_prep_instructions,
-            payload.is_available_in_day,
-            reqtech,
-            payload.short_description,
-            editors,
-            false
-        );
-
-        types::internal_types::log_server_route(StatusCode::CREATED, &format!("User {} posted a new Mx", user.name.bright_blue()));
-        state.dbreference.edit_mx(mx).await
+        let new_mx = MorningExercise::new(mx.id,
+                                          mx.owner,
+                                          payload.date,
+                                          payload.title,
+                                          payload.description,
+                                          payload.min_grade,
+                                          payload.max_grade,
+                                          payload.young_student_prep_instructions,
+                                          payload.is_available_in_day,
+                                          reqtech,
+                                          payload.short_description,
+                                         editors,
+                                          false);
+        let query = state.dbreference.edit_mx(new_mx).await;
+        types::internal_types::log_server_route(StatusCode::CREATED, &format!("User {} edited an Mx: {}", user.name.bright_blue(), query.1));
+    (StatusCode::CREATED, "Mx edited".to_string())
 }
 #[debug_handler]
 pub async fn post_mx(State(state): State<AppState>,
                      Extension(user): Extension<GoogleUser>,
-                     Json(payload): Json<MxPost>) -> (StatusCode, String) {
+                     Json(payload): Json<MxPost>) -> impl IntoResponse {
 
     let editors = types::internal_types::string_to_list( payload.editors_json).unwrap();
 
@@ -108,7 +112,8 @@ pub async fn post_mx(State(state): State<AppState>,
     );
 
     types::internal_types::log_server_route(StatusCode::CREATED, &format!("User {} posted a new Mx", user.name.bright_blue()));
-    state.dbreference.create_mx(mx).await
+    let query = state.dbreference.create_mx(mx).await;
+    (query.0, Json(query.1).into_response())
 }
 #[debug_handler]
 pub async fn approve_mx(State(state): State<AppState>,
@@ -174,9 +179,9 @@ pub struct title {
 
 #[debug_handler]
 pub async fn delete_mx(State(state): State<AppState>,
-                       Path(params): Path<String>) -> (StatusCode, String) {
-    let mx_title = params;
-    let query = state.dbreference.delete_mx_by_title(&mx_title).await;
+                       Path(params): Path<i64>) -> (StatusCode, String) {
+    let mx_id = params;
+    let query = state.dbreference.delete_mx_by_id(mx_id).await;
     if query.0 == StatusCode::INTERNAL_SERVER_ERROR {
         types::internal_types::log_server_route(StatusCode::OK, &format!("Mx failed to be  deleted - {:?}", query.1));
     }
@@ -198,4 +203,19 @@ pub struct MxPost {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct  Mxcalendarbody {
     title: String
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MxEdit {
+    id: i64,
+    date: chrono::NaiveDate,
+    title: String,
+    description: String,
+    min_grade: i32,
+    max_grade: i32,
+    young_student_prep_instructions: String,
+    is_available_in_day: bool,
+    required_tech_json: String,
+    short_description: String,
+    editors_json: String
 }

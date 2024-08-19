@@ -67,6 +67,31 @@ impl CalendarEvent {
 }
 
 impl MorningExercise {
+    ///
+    ///
+    /// # Arguments
+    ///
+    /// * `id`:
+    /// * `owner`:
+    /// * `date`:
+    /// * `title`:
+    /// * `description`:
+    /// * `min_grade`:
+    /// * `max_grade`:
+    /// * `young_student_prep_instructions`:
+    /// * `is_available_in_day`:
+    /// * `required_tech_json`:
+    /// * `short_description`:
+    /// * `editors_json`:
+    /// * `is_approved`:
+    ///
+    /// returns: MorningExercise
+    ///
+    /// # Examples
+    ///
+    /// ```
+    ///
+    /// ```
     //constructors
     pub fn new(id:i32,
                owner: GoogleUser,
